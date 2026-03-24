@@ -1,7 +1,7 @@
 'use client'
 import { Activity, LayoutDashboard, Users, Search, Bell, CheckCircle2, AlertCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { dataProducao } from '../data/data'
+import { dataProducao, dataStatus } from '../data/data'
 
 export default function Home() {
   
@@ -100,6 +100,26 @@ export default function Home() {
                     <Tooltip cursor={{ fill: '#f8fafc'}} />
                     <Bar dataKey={"prod"} fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+            <div className="chart-card">
+              <h3 className="chart-title">Status da Frota</h3>
+              <div style={{height: '300px'}}>
+                <ResponsiveContainer width={"100%"} height={"100%"}>
+                  <PieChart>
+                    <Pie
+                      data={dataStatus}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey={"value"}
+                      >
+                        {dataStatus.map((entry, index) => (
+                          <Cell key={`cell-${index}`}
+                        ) )}
+                    </Pie>
+                  </PieChart>
                 </ResponsiveContainer>
               </div>
             </div>
