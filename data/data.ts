@@ -39,5 +39,5 @@ export const maquinas = [
     {id: 1, nome: "Prensa A2", consumo: 120, status: "normal"},
     {id: 2, nome: "Esteira A2", consumo: 210, status: "Alerta"},
     {id: 3, nome: "CNC C3", consumo: 95, status: "normal"},
-    {id: 4, nome: "Robô D4", consumo: 320, status: "crítico"},
+    {id: 4, nome: "Robô D4", consumo: 320, status: "crítico"}
 ]

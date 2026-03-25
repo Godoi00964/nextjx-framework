@@ -1,9 +1,22 @@
 "use client"
 import { Activity, LayoutDashboard, Users, Search, Bell, CheckCircle2, AlertCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { COLORS, dataProducao, dataStatus } from '../data/data'
+import { COLORS, dataProducao, dataStatus, maquinas, comsumo } from '../data/data'
+import { useState } from "react";
 
 export default function Home() {
+  /*Aqui é a onde estou guardando o que o usuario esta digitando*/
+  const[busca, setBusca] = useState('')
+
+  const maquinasFiltradas = filtrarMaquinasPorNome();
+
+  function filtrarMaquinasPorNome(){
+    return maquinas.filter((item) => item.nome.toLowerCase().includes(busca.toLowerCase()))
+  }
+  console.log(maquinasFiltradas)
+  
+    
+  
   
   return (
     <div className="app-container">
@@ -34,7 +47,8 @@ export default function Home() {
         <header className="header">
           <div className="search-box">
             <Search size={18}/>
-            <input type="text" placeholder="Procurar dados" id="" />
+            <input type="text" placeholder="Procurar dados" id="" 
+            onChange={(e) => setBusca(e.target.value)}/>
           </div>
           <div>
             <Bell size={20} />
@@ -90,9 +104,36 @@ export default function Home() {
           </div>
           <div className="charts-grid">
             <div className="chart-card">
-              <h3 className="chart-title">Desempenho por Turno</h3>
+              {/*Mudança para trazer a visualização de busca*/}
+              <h3 className="chart-title">{
+                busca !== '' ? 'Resultado da Pesquisa' : 'Desempenho por Turno'
+                }</h3>
               <div style={{ height: '300px'}}>
-                <ResponsiveContainer width={"100%"} height={"100%"}>
+                {busca !== '' ? (
+                  <div style={{height: '100%', overflowX: 'auto'}}>
+                    <table style={{width:'100%', textAlign: 'left', borderCollapse: 'collapse'}}>
+                      <thead>
+                        <tr style={{borderBottom: '1px solid #e2e8f0'}}>
+                          <th style={{padding: '8px'}}>Máquina</th>
+                          <th style={{padding: '8px'}}>Consumo</th>
+                          <th style={{padding: '8px'}}>Status</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {
+                          maquinasFiltradas.map((maquina) => (
+                            <tr key={maquina.id} style={{ borderBottom: '1px solid #f1f5f9'}}>
+                              <td style={{ padding: '8px'}}>{maquina.nome}</td>
+                              <td style={{ padding: '8px'}}>{maquina.consumo}</td>
+                              <td style={{ padding: '8px', textTransform: 'capitalize'}}>{maquina.status}</td>
+                            </tr>
+                          ))
+                        }
+                      </tbody>
+                    </table>
+
+                  </div>
+                ) : (<ResponsiveContainer width={"100%"} height={"100%"}>
                   <BarChart data={dataProducao}>
                     <CartesianGrid strokeDasharray={"3 3"} vertical={false} stroke="#f1f5f9" />
                     <XAxis dataKey={"name"} axisLine={false} tickLine={false} />
@@ -100,7 +141,8 @@ export default function Home() {
                     <Tooltip cursor={{ fill: '#f8fafc'}} />
                     <Bar dataKey={"prod"} fill="#3b82f6" radius={[4, 4, 0, 0]} />
                   </BarChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer>)}
+                
               </div>
             </div>
             <div className="chart-card">
