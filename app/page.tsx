@@ -1,7 +1,7 @@
-'use client'
+"use client"
 import { Activity, LayoutDashboard, Users, Search, Bell, CheckCircle2, AlertCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import { dataProducao, dataStatus } from '../data/data'
+import { COLORS, dataProducao, dataStatus } from '../data/data'
 
 export default function Home() {
   
@@ -106,7 +106,7 @@ export default function Home() {
             <div className="chart-card">
               <h3 className="chart-title">Status da Frota</h3>
               <div style={{height: '300px'}}>
-                <ResponsiveContainer width={"100%"} height={"100%"}>
+                <ResponsiveContainer width={"100%"} height={"100%"} >
                   <PieChart>
                     <Pie
                       data={dataStatus}
@@ -114,10 +114,10 @@ export default function Home() {
                       outerRadius={80}
                       paddingAngle={5}
                       dataKey={"value"}
-                      >
-                        {dataStatus.map((entry, index) => (
-                          <Cell key={`cell-${index}`}
-                        ) )}
+                    >
+                      {dataStatus.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      )) }
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>
