@@ -2,11 +2,18 @@
 import { Activity, LayoutDashboard, Users, Search, Bell, CheckCircle2, AlertCircle } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { COLORS, dataProducao, dataStatus, maquinas, comsumo } from '../data/data'
-import { useState } from "react";
+import { useState,useEffect } from "react";
+
 
 export default function Home() {
   /*Aqui é a onde estou guardando o que o usuario esta digitando*/
   const[busca, setBusca] = useState('')
+  /*Estado para criar efeito loading */
+
+  const [loading, setloading] = useState(false)
+
+  /*Estado para armazenar os dados das máquinas */
+  const [resultado, setResultado] = useState([]);
 
   const maquinasFiltradas = filtrarMaquinasPorNome();
 
@@ -14,10 +21,33 @@ export default function Home() {
     return maquinas.filter((item) => item.nome.toLowerCase().includes(busca.toLowerCase()))
   }
   console.log(maquinasFiltradas)
+
+  useEffect(() => {
+    setloading(true);
+
+   const timeout = setTimeout(() => {
+  const dados_filtrados = filtrarMaquinasPorNome();
   
+  // 1. Atualizamos os resultados e o loading
+  setResultado(dados_filtrados);
+  setloading(false);
+
+  // 2. Lógica do Contador
+  // Verificamos se há algo escrito para não contar buscas vazias
+  if (termoBusca.trim() !== "") {
+    setContadorBuscas((prev) => prev + 1);
     
+    // Opcional: Salvar no localStorage para persistência
+    const totalSalvo = parseInt(localStorage.getItem('total_pesquisas') || 0);
+    localStorage.setItem('total_pesquisas', totalSalvo + 1);
+  }
+}, 2000);
+
+return () => clearTimeout(timeout);
+  }, [busca])
   
-  
+ 
+    
   return (
     <div className="app-container">
       {/* Sidebar */}
@@ -165,6 +195,10 @@ export default function Home() {
                 </ResponsiveContainer>
               </div>
             </div>
+            {loading && <p>Buscando Dados...</p>}
+            {!loading && resultado.length === 0 && (
+              <p>Nenhum processo encontrado</p>
+            )}
           </div>
         </div>
       </main>
